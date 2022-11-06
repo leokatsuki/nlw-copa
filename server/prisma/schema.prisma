@@ -19,13 +19,13 @@ model Pool {
   ownerId   String?
 
   participants Participant[]
-  owner        User?          @relation(fields: [ownerId], references: [id])
+  owner        User?         @relation(fields: [ownerId], references: [id])
 }
 
 model Participant {
-  id      String  @id @default(cuid())
-  userId  String
-  poolId  String
+  id     String @id @default(cuid())
+  userId String
+  poolId String
 
   guesses Guess[]
   user    User    @relation(fields: [userId], references: [id])
@@ -38,11 +38,12 @@ model User {
   id        String   @id @default(cuid())
   name      String
   email     String   @unique
+  googleId  String?   @unique
   avatarUrl String?
   createdAt DateTime @default(now())
 
   participatingAt Participant[]
-  ownPools         Pool[]
+  ownPools        Pool[]
 }
 
 model Game {
@@ -66,4 +67,6 @@ model Guess {
 
   participant Participant @relation(fields: [participantId], references: [id])
   game        Game        @relation(fields: [gameId], references: [id])
+
+  @@unique([participantId, gameId])
 }
